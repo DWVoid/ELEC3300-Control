@@ -1,0 +1,13 @@
+# Cube IDE build directories
+[Dd]ebug/
+[Rr]elease/
+# CLion configuration directories
+cmake-build-*/
+# CLion Aux Files
+.idea/ 
+# Eclipse IDE non-project files
+.settings/
+# Library files that are not touched (regenerate from CubeMX if needed)
+Drivers/
+Middlewares/
+# All the remaining files will be included, including libraries in "Core" as they tend to be modifiable
