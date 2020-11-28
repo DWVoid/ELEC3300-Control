@@ -101,6 +101,73 @@ void HAL_MspInit(void)
 }
 
 /**
+* @brief I2C MSP Initialization
+* This function configures the hardware resources used in this example
+* @param hi2c: I2C handle pointer
+* @retval None
+*/
+void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(hi2c->Instance==I2C1)
+  {
+  /* USER CODE BEGIN I2C1_MspInit 0 */
+
+  /* USER CODE END I2C1_MspInit 0 */
+
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**I2C1 GPIO Configuration
+    PB8     ------> I2C1_SCL
+    PB9     ------> I2C1_SDA
+    */
+    GPIO_InitStruct.Pin = GIRO_I2C_SCL_Pin|GIRO_I2C_SDA_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    __HAL_AFIO_REMAP_I2C1_ENABLE();
+
+    /* Peripheral clock enable */
+    __HAL_RCC_I2C1_CLK_ENABLE();
+  /* USER CODE BEGIN I2C1_MspInit 1 */
+
+  /* USER CODE END I2C1_MspInit 1 */
+  }
+
+}
+
+/**
+* @brief I2C MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param hi2c: I2C handle pointer
+* @retval None
+*/
+void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
+{
+  if(hi2c->Instance==I2C1)
+  {
+  /* USER CODE BEGIN I2C1_MspDeInit 0 */
+
+  /* USER CODE END I2C1_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_I2C1_CLK_DISABLE();
+
+    /**I2C1 GPIO Configuration
+    PB8     ------> I2C1_SCL
+    PB9     ------> I2C1_SDA
+    */
+    HAL_GPIO_DeInit(GIRO_I2C_SCL_GPIO_Port, GIRO_I2C_SCL_Pin);
+
+    HAL_GPIO_DeInit(GIRO_I2C_SDA_GPIO_Port, GIRO_I2C_SDA_Pin);
+
+  /* USER CODE BEGIN I2C1_MspDeInit 1 */
+
+  /* USER CODE END I2C1_MspDeInit 1 */
+  }
+
+}
+
+/**
 * @brief TIM_Base MSP Initialization
 * This function configures the hardware resources used in this example
 * @param htim_base: TIM_Base handle pointer
@@ -121,10 +188,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /**TIM1 GPIO Configuration
     PA8     ------> TIM1_CH1
     */
-    GPIO_InitStruct.Pin = FG_LRFT_Pin;
+    GPIO_InitStruct.Pin = FG_LEFT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(FG_LRFT_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(FG_LEFT_GPIO_Port, &GPIO_InitStruct);
 
     /* TIM1 interrupt Init */
     HAL_NVIC_SetPriority(TIM1_CC_IRQn, 5, 0);
@@ -243,7 +310,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
     /**TIM1 GPIO Configuration
     PA8     ------> TIM1_CH1
     */
-    HAL_GPIO_DeInit(FG_LRFT_GPIO_Port, FG_LRFT_Pin);
+    HAL_GPIO_DeInit(FG_LEFT_GPIO_Port, FG_LEFT_Pin);
 
     /* TIM1 interrupt DeInit */
     HAL_NVIC_DisableIRQ(TIM1_CC_IRQn);
@@ -317,15 +384,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PC10     ------> UART4_TX
     PC11     ------> UART4_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_10;
+    GPIO_InitStruct.Pin = BLE_C_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_C_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_11;
+    GPIO_InitStruct.Pin = BLE_C_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_C_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* UART4 DMA Init */
     /* UART4_RX Init */
@@ -351,7 +418,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     hdma_uart4_tx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_uart4_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_uart4_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_uart4_tx.Init.Mode = DMA_CIRCULAR;
+    hdma_uart4_tx.Init.Mode = DMA_NORMAL;
     hdma_uart4_tx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_uart4_tx) != HAL_OK)
     {
@@ -414,7 +481,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     hdma_usart1_tx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart1_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart1_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_usart1_tx.Init.Mode = DMA_CIRCULAR;
+    hdma_usart1_tx.Init.Mode = DMA_NORMAL;
     hdma_usart1_tx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_usart1_tx) != HAL_OK)
     {
@@ -443,15 +510,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Pin = BLE_L_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_L_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_3;
+    GPIO_InitStruct.Pin = BLE_L_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_L_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART2 DMA Init */
     /* USART2_RX Init */
@@ -477,7 +544,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_usart2_tx.Init.Mode = DMA_CIRCULAR;
+    hdma_usart2_tx.Init.Mode = DMA_NORMAL;
     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK)
     {
@@ -506,15 +573,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_10;
+    GPIO_InitStruct.Pin = BLE_R_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_R_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_11;
+    GPIO_InitStruct.Pin = BLE_R_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_R_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART3 DMA Init */
     /* USART3_RX Init */
@@ -540,7 +607,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     hdma_usart3_tx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart3_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart3_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_usart3_tx.Init.Mode = DMA_CIRCULAR;
+    hdma_usart3_tx.Init.Mode = DMA_NORMAL;
     hdma_usart3_tx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_usart3_tx) != HAL_OK)
     {
@@ -579,7 +646,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PC10     ------> UART4_TX
     PC11     ------> UART4_RX
     */
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_10|GPIO_PIN_11);
+    HAL_GPIO_DeInit(GPIOC, BLE_C_TX_Pin|BLE_C_RX_Pin);
 
     /* UART4 DMA DeInit */
     HAL_DMA_DeInit(huart->hdmarx);
@@ -627,7 +694,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2|GPIO_PIN_3);
+    HAL_GPIO_DeInit(GPIOA, BLE_L_TX_Pin|BLE_L_RX_Pin);
 
     /* USART2 DMA DeInit */
     HAL_DMA_DeInit(huart->hdmarx);
@@ -651,7 +718,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10|GPIO_PIN_11);
+    HAL_GPIO_DeInit(GPIOB, BLE_R_TX_Pin|BLE_R_RX_Pin);
 
     /* USART3 DMA DeInit */
     HAL_DMA_DeInit(huart->hdmarx);

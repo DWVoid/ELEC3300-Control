@@ -25,20 +25,7 @@ public:
     explicit Machine(const MachineInit &init) noexcept:
             mLeftMotor(RunMotor(init.LeftMotor)), mRightMotor(RunMotor(init.RightMotor)),
 			mBArr(nullptr) {
-        LCD_INIT();
-        mLeftMotor->SetTargetSpeed(0.3);
-        mRightMotor->SetTargetSpeed(0.3);
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
-        mDebugDisplay = rstd::thread(osPriorityNormal, 512, [this]() noexcept {
-        	for (;;) {
-        		rstd::run([this]() noexcept { DisplayDebug(); });
-        		rstd::this_thread::sleep_for(rstd::chrono::milliseconds(10));
-        	}
-        });
-        rstd::console::init(30, 20 - 5);
-        rstd::console::set_display_handler([](const char* text, int line) noexcept {
-        	LCD_DrawString_Grid(0, 4 + line, text);
-        });
+    	LateInit(init);
     }
 
     void DisplayDebug() noexcept {
@@ -55,6 +42,51 @@ private:
     rstd::thread mDebugDisplay;
     char mLine[31];
     int mScan = 0;
+
+    void LateInit(const MachineInit &init) noexcept {
+    	AllocateConsole();
+    	InitPeriferals(init);
+    	MotorSetStartup();
+    	DebugLoopStart();
+    }
+
+    void AllocateConsole() noexcept {
+    	LCD_INIT();
+    	rstd::console::init(30, 20 - 5);
+    	rstd::console::set_display_handler([](const char* text, int line) noexcept {
+    		LCD_DrawString_Grid(0, 4 + line, text);
+    	});
+    }
+
+    void InitPeriferals(const MachineInit &init) noexcept {
+    	mBArr = std::make_unique<BArray>(
+    			init.BArray.Center,
+    			init.BArray.Left,
+    			init.BArray.Right,
+    			init.BArray.CenterName,
+    			init.BArray.LeftName,
+    			init.BArray.RightName
+    	);
+    	mBArr->Start([](int32_t, int32_t, int32_t) noexcept {
+    	});
+    }
+
+    void MotorSetStartup() noexcept {
+    	// Set Init Speed
+        mLeftMotor->SetTargetSpeed(0.3);
+        mRightMotor->SetTargetSpeed(0.3);
+        // 24V Enable
+        //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+    }
+
+    void DebugLoopStart() noexcept {
+    	 mDebugDisplay = rstd::thread(osPriorityBelowNormal, 512, [this]() noexcept {
+    		 for (;;) {
+	        		rstd::run([this]() noexcept { DisplayDebug(); });
+	        		rstd::this_thread::sleep_for(rstd::chrono::milliseconds(10));
+	        	}
+    	 });
+    }
 
     void PrintClock() noexcept {
     	using std::chrono::duration_cast;
@@ -89,10 +121,6 @@ private:
     			mLeftMotor->GetScaler(), mRightMotor->GetScaler()
 		);
     	LCD_DrawString_Grid(0, mScan++, mLine);
-    	/*std::snprintf(mLine, 30, "QL%11u, QR%11u",
-    			mLeftMotor->GetIrqCount(), mRightMotor->GetIrqCount()
-		);
-    	LCD_DrawString_Grid(0, mScan++, mLine);*/
     }
 };
 

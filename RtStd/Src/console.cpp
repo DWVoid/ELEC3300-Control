@@ -38,6 +38,11 @@ extern "C" int __io_putchar(int ch) noexcept {
 		if ((++gLoc - gPool) % gWidth == (gWidth - 1)) goto relocate;
 		goto fn_exit;
 	}
+	else {
+		do {
+		*gLoc = ' ';
+		} while (((++gLoc - gPool) % gWidth != (gWidth - 1)));
+	}
 	relocate:
 	gRoll = (gRoll + 1) % gHeight;
 	gLoc = gPool + gWidth * gRoll;

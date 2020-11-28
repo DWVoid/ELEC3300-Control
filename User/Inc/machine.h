@@ -43,6 +43,7 @@ typedef struct {
     MotorInit LeftMotor;
     MotorInit RightMotor;
     BArrayInit BArray;
+	UART_HandleTypeDef* DebugPort;
 } MachineInit;
 
 C_BEGIN

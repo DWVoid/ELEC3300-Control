@@ -286,14 +286,28 @@ void LCD_DrawLine(uint16_t usC1, uint16_t usP1, uint16_t usC2, uint16_t usP2, ui
 }
 
 void LCD_DrawChar(uint16_t usC, uint16_t usP, const char cChar) {
-    uint8_t ucRelPos = cChar - ' ';
+    // Set the display area
     LCD_OpenWindow(usC, usP, WIDTH_EN_CHAR, HEIGHT_EN_CHAR);
     LCD_Write_Cmd(CMD_SetPixel);
-    for (uint8_t ucPage = 0; ucPage < HEIGHT_EN_CHAR; ucPage++) {
-        uint8_t ucTemp = ucAscii_1608[ucRelPos][ucPage];
-        for (uint8_t ucColumn = 0; ucColumn < WIDTH_EN_CHAR; ucColumn++) {
-            LCD_Write_Data(((ucTemp & 0x01) ? 0x001F: 0xFFFF));
-            ucTemp >>= 1;
+    // setup cursor
+    if (cChar <= ' ') {
+    	const auto max = WIDTH_EN_CHAR * HEIGHT_EN_CHAR;
+    	for (auto i = 0; i < max; ++i) LCD_Write_Data(0xFFFF);
+    }
+    else {
+        uint8_t* ths = ucAscii_1608[cChar - ' '];
+        const auto end = ths + HEIGHT_EN_CHAR;
+        for (; ths < end; ++ths) {
+            const auto line = *ths;
+            // manual unroll for performance
+            LCD_Write_Data(((line & 0b00000001) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b00000010) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b00000100) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b00001000) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b00010000) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b00100000) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b01000000) ? 0x001F: 0xFFFF));
+            LCD_Write_Data(((line & 0b10000000) ? 0x001F: 0xFFFF));
         }
     }
 }

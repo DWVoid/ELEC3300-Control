@@ -10,14 +10,6 @@ extern UART_HandleTypeDef huart4;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
-extern DMA_HandleTypeDef hdma_uart4_rx;
-extern DMA_HandleTypeDef hdma_uart4_tx;
-extern DMA_HandleTypeDef hdma_usart1_rx;
-extern DMA_HandleTypeDef hdma_usart1_tx;
-extern DMA_HandleTypeDef hdma_usart2_rx;
-extern DMA_HandleTypeDef hdma_usart2_tx;
-extern DMA_HandleTypeDef hdma_usart3_rx;
-extern DMA_HandleTypeDef hdma_usart3_tx;
 
 static MachineInit init = {
         .LeftMotor = {
@@ -45,13 +37,14 @@ static MachineInit init = {
                 .Meter = {.MaxMeasurePeriod = 1000, .WheelDiameter = 0.065}
         },
         .BArray = {
-        	.Center = &huart4,
+        	.Center = /*&huart1, //*/&huart4,
             .Left = &huart2,
 		    .Right = &huart3,
 			.CenterName = "BARR-C",
 			.LeftName = "BARR-L",
 			.RightName = "BARR-R"
-        }
+        },
+		.DebugPort = &huart1
 };
 
 MachineInit* GetInit() { return &init; }

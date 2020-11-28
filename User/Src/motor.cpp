@@ -229,7 +229,7 @@ namespace {
 
         void Start() {
             mStop = false;
-            mThread = rstd::thread(osPriorityNormal, 512, [this]() {
+            mThread = rstd::thread(osPriorityAboveNormal, 512, [this]() {
             	rstd::run([this]() noexcept { mMeter.NVICSetup(); });
                 while (!mStop) CtrlStep();
                 Reset();

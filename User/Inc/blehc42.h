@@ -19,9 +19,7 @@ public:
 			const char* nc,
 			const char* nl,
 			const char* nr
-	): mC(c), mL(l), mR(r), mNC(nc), mNL(nl), mNR(nr) {
-		SysInit();
-	}
+	): mC(c), mL(l), mR(r), mNC(nc), mNL(nl), mNR(nr) {}
 
 	void Start(Callback callback);
 

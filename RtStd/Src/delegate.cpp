@@ -19,18 +19,30 @@ namespace {
     		return instance;
     	}
 
-    	void Signal() noexcept { gSignal.release(); }
+    	void Push(ForwardNode* node) noexcept {
+    		if (gHead == nullptr) {
+    			gHead = gTail = node;
+    		}
+    		else {
+    			gTail->Next = node;
+    			gTail = node;
+    		}
+    		gSignal.release();
+    	}
     private:
     	Exec() noexcept {
     		rstd::thread(osPriorityHigh, 4096, [this]() noexcept {
-    			for (;;) {
-    				gSignal.acquire();
-    				const auto& ths = *gHead;
-    				gHead = gHead->Next;
-    				ths.Function(ths.User);
-    				osThreadResume(ths.Id.native());
-    			}
+    			for (;;) Once();
     		}).detach();
+    	}
+
+    	void Once() noexcept {
+    		gSignal.acquire();
+    		const auto& ths = *gHead;
+    		gHead = gHead->Next;
+    		ths.Function(ths.User);
+    		if (ths.Id == rstd::thread::id()) delete &ths;
+    		else osThreadResume(ths.Id.native());
     	}
 
     	rstd::semaphore gSignal { 4096, 0 };
@@ -43,15 +55,17 @@ void rstd::_delegate_run(void(*function)(void*) noexcept, void* user) noexcept {
 		rstd::this_thread::get_id(),
 		nullptr
 	};
-	if (gHead == nullptr) {
-		gHead = gTail = &node;
-	}
-	else {
-		gTail->Next = &node;
-		gTail = &node;
-	}
-	Exec::Get().Signal();
+	Exec::Get().Push(&node);
 	osThreadSuspend(node.Id.native());
+}
+
+
+void rstd::_delegate_spawn(void(*function)(void*) noexcept, void* user) noexcept {
+	Exec::Get().Push(new ForwardNode {
+		function, user,
+		rstd::thread::id(),
+		nullptr
+	});
 }
 
 void rstd::hold_indefinitely() noexcept { for(;;) osDelay(0x7FFFFFFF); }
