@@ -291,14 +291,14 @@ void LCD_DrawChar(uint16_t usC, uint16_t usP, const char cChar) {
     LCD_Write_Cmd(CMD_SetPixel);
     // setup cursor
     if (cChar <= ' ') {
-    	const auto max = WIDTH_EN_CHAR * HEIGHT_EN_CHAR;
-    	for (auto i = 0; i < max; ++i) LCD_Write_Data(0xFFFF);
+    	const int max = WIDTH_EN_CHAR * HEIGHT_EN_CHAR;
+    	for (int i = 0; i < max; ++i) LCD_Write_Data(0xFFFF);
     }
     else {
         uint8_t* ths = ucAscii_1608[cChar - ' '];
-        const auto end = ths + HEIGHT_EN_CHAR;
+        const uint8_t* end = ths + HEIGHT_EN_CHAR;
         for (; ths < end; ++ths) {
-            const auto line = *ths;
+            const uint8_t line = *ths;
             // manual unroll for performance
             LCD_Write_Data(((line & 0b00000001) ? 0x001F: 0xFFFF));
             LCD_Write_Data(((line & 0b00000010) ? 0x001F: 0xFFFF));

@@ -54,16 +54,10 @@
 /* USER CODE END FunctionPrototypes */
 
 /* Hook prototypes */
-void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName);
+void vApplicationIdleHook(void);
 
-/* USER CODE BEGIN 4 */
-void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
-{
-   /* Run time stack overflow checking is performed if
-   configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook function is
-   called if a stack overflow is detected. */
-}
-/* USER CODE END 4 */
+/* USER CODE BEGIN 2 */
+/* USER CODE END 2 */
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */

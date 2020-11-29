@@ -11,7 +11,7 @@ public:
 
 class BArray {
 public:
-	using Callback = void (*)(int32_t, int32_t, int32_t) noexcept;
+	using Callback = void (*)(int32_t, int32_t, int32_t, void*) noexcept;
 	BArray(
 			UART_HandleTypeDef* c,
 			UART_HandleTypeDef* l,
@@ -21,16 +21,20 @@ public:
 			const char* nr
 	): mC(c), mL(l), mR(r), mNC(nc), mNL(nl), mNR(nr) {}
 
-	void Start(Callback callback);
+	void Start(Callback callback, void* user);
 
 	void Stop();
 private:
 	BleHC42 mC, mL, mR;
 	const char* mNC, *mNL, *mNR;
 	Callback mCallback;
+	void* mCbUser;
 	bool mStop;
 
 	void SysInit();
-	void HandleControl();
-	void HandleCmdGet(char prop);
+	void DevRst();
+	void ExpectCmd() noexcept;
+	void HandleControl() noexcept;
+	void HandleCmdGet(char prop) noexcept;
+	void IssueCommand(int32_t x, int32_t y, int32_t z) noexcept;
 };

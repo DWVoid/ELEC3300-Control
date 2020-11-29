@@ -3,7 +3,8 @@
 #include <chrono>
 #include <cmsis_os2.h>
 
-namespace rstd::chrono {
+namespace rstd {
+namespace chrono {
     class system_clock {
     public:
         using duration = std::chrono::duration<uint32_t, std::milli>;
@@ -35,5 +36,5 @@ namespace rstd::chrono {
     using minutes = std::chrono::duration<uint32_t, std::ratio<60>>;
 
     using hours = std::chrono::duration<uint32_t, std::ratio<3600>>;
-
+}
 }

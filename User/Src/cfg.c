@@ -37,9 +37,9 @@ static MachineInit init = {
                 .Meter = {.MaxMeasurePeriod = 1000, .WheelDiameter = 0.065}
         },
         .BArray = {
-        	.Center = /*&huart1, //*/&huart4,
-            .Left = &huart2,
-		    .Right = &huart3,
+        	.Center = &huart3,
+            .Left = &huart4,
+		    .Right = &huart2,
 			.CenterName = "BARR-C",
 			.LeftName = "BARR-L",
 			.RightName = "BARR-R"

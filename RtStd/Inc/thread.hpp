@@ -71,17 +71,13 @@ namespace rstd {
 
         template<class F, class ...Args>
         explicit thread(osPriority_t priority, uint32_t stackSize, F &&f, Args &&... args) {
-            osThreadAttr_t attr = {
-                    .name = nullptr,
-                    .attr_bits = osThreadDetached,
-                    .cb_mem = nullptr,
-                    .cb_size = 0,
-                    .stack_mem = nullptr,
-                    .stack_size = stackSize,
-                    .priority = priority,
-                    .tz_module = 0,
-                    .reserved = 0
-            };
+            osThreadAttr_t attr {};
+			attr.cb_mem = attr.stack_mem = nullptr;
+			attr.cb_size = attr.tz_module = attr.reserved = 0;
+            attr.name = nullptr;
+            attr.attr_bits = osThreadDetached;
+			attr.stack_size = stackSize;
+			attr.priority = priority;
             using T = _defer_callable<F, Args...>;
             if (sizeof(T) <= sizeof(void *) && std::is_trivially_copyable<T>::value) {
                 union A {

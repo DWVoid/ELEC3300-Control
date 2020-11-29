@@ -60,16 +60,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BLE_L_TX_Pin GPIO_PIN_2
-#define BLE_L_TX_GPIO_Port GPIOA
-#define BLE_L_RX_Pin GPIO_PIN_3
-#define BLE_L_RX_GPIO_Port GPIOA
+#define BLE_R_TX_Pin GPIO_PIN_2
+#define BLE_R_TX_GPIO_Port GPIOA
+#define BLE_R_RX_Pin GPIO_PIN_3
+#define BLE_R_RX_GPIO_Port GPIOA
 #define PWM_RIGHT_Pin GPIO_PIN_6
 #define PWM_RIGHT_GPIO_Port GPIOA
-#define BLE_R_TX_Pin GPIO_PIN_10
-#define BLE_R_TX_GPIO_Port GPIOB
-#define BLE_R_RX_Pin GPIO_PIN_11
-#define BLE_R_RX_GPIO_Port GPIOB
+#define BLE_C_TX_Pin GPIO_PIN_10
+#define BLE_C_TX_GPIO_Port GPIOB
+#define BLE_C_RX_Pin GPIO_PIN_11
+#define BLE_C_RX_GPIO_Port GPIOB
 #define LCD_BK_Pin GPIO_PIN_12
 #define LCD_BK_GPIO_Port GPIOD
 #define FG_RIGHT_Pin GPIO_PIN_6
@@ -82,10 +82,10 @@ void Error_Handler(void);
 #define RV_RIGHT_GPIO_Port GPIOC
 #define FG_LEFT_Pin GPIO_PIN_8
 #define FG_LEFT_GPIO_Port GPIOA
-#define BLE_C_TX_Pin GPIO_PIN_10
-#define BLE_C_TX_GPIO_Port GPIOC
-#define BLE_C_RX_Pin GPIO_PIN_11
-#define BLE_C_RX_GPIO_Port GPIOC
+#define BLE_L_TX_Pin GPIO_PIN_10
+#define BLE_L_TX_GPIO_Port GPIOC
+#define BLE_L_RX_Pin GPIO_PIN_11
+#define BLE_L_RX_GPIO_Port GPIOC
 #define PWM_LEFT_Pin GPIO_PIN_6
 #define PWM_LEFT_GPIO_Port GPIOB
 #define GIRO_I2C_SCL_Pin GPIO_PIN_8

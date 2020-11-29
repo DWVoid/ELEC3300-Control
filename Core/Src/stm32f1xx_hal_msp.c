@@ -384,15 +384,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PC10     ------> UART4_TX
     PC11     ------> UART4_RX
     */
-    GPIO_InitStruct.Pin = BLE_C_TX_Pin;
+    GPIO_InitStruct.Pin = BLE_L_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(BLE_C_TX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_L_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = BLE_C_RX_Pin;
+    GPIO_InitStruct.Pin = BLE_L_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(BLE_C_RX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_L_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* UART4 DMA Init */
     /* UART4_RX Init */
@@ -510,15 +510,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    GPIO_InitStruct.Pin = BLE_L_TX_Pin;
+    GPIO_InitStruct.Pin = BLE_R_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(BLE_L_TX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_R_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = BLE_L_RX_Pin;
+    GPIO_InitStruct.Pin = BLE_R_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(BLE_L_RX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_R_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART2 DMA Init */
     /* USART2_RX Init */
@@ -573,15 +573,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX
     */
-    GPIO_InitStruct.Pin = BLE_R_TX_Pin;
+    GPIO_InitStruct.Pin = BLE_C_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(BLE_R_TX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_C_TX_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = BLE_R_RX_Pin;
+    GPIO_InitStruct.Pin = BLE_C_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(BLE_R_RX_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(BLE_C_RX_GPIO_Port, &GPIO_InitStruct);
 
     /* USART3 DMA Init */
     /* USART3_RX Init */
@@ -646,7 +646,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PC10     ------> UART4_TX
     PC11     ------> UART4_RX
     */
-    HAL_GPIO_DeInit(GPIOC, BLE_C_TX_Pin|BLE_C_RX_Pin);
+    HAL_GPIO_DeInit(GPIOC, BLE_L_TX_Pin|BLE_L_RX_Pin);
 
     /* UART4 DMA DeInit */
     HAL_DMA_DeInit(huart->hdmarx);
@@ -694,7 +694,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    HAL_GPIO_DeInit(GPIOA, BLE_L_TX_Pin|BLE_L_RX_Pin);
+    HAL_GPIO_DeInit(GPIOA, BLE_R_TX_Pin|BLE_R_RX_Pin);
 
     /* USART2 DMA DeInit */
     HAL_DMA_DeInit(huart->hdmarx);
@@ -718,7 +718,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PB10     ------> USART3_TX
     PB11     ------> USART3_RX
     */
-    HAL_GPIO_DeInit(GPIOB, BLE_R_TX_Pin|BLE_R_RX_Pin);
+    HAL_GPIO_DeInit(GPIOB, BLE_C_TX_Pin|BLE_C_RX_Pin);
 
     /* USART3 DMA DeInit */
     HAL_DMA_DeInit(huart->hdmarx);
